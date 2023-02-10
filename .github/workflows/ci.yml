@@ -5,6 +5,7 @@ on:
       - l10n_develop
       - gh-pages
     paths-ignore:
+      - '.github/workflows/**'
       - '*.md'
       - 'LICENSE'
       - 'monitoring/grafana-dashboard.json'
@@ -13,6 +14,7 @@ on:
       - '*'
   pull_request:
     paths-ignore:
+      - '.github/workflows/**'
       - '*.md'
       - 'LICENSE'
       - 'data/static/i18n/*.json'
