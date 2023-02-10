@@ -34,8 +34,8 @@ on:
 
 # Global environment variables
 env:
-  APP_NAME: "Juice Shop [KAL]"
-  PARENT_RELEASE_NAME: "master"
+  APP_NAME: "'Juice Shop [KAL]'"
+  PARENT_RELEASE_NAME: "fortify-demo"
   ANGULAR_CLI_VERSION: 13
 
 jobs:
