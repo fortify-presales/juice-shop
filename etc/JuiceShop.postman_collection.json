@@ -1,0 +1,283 @@
+{
+	"info": {
+		"_postman_id": "3f0ff123-7b24-4f59-a3b3-4b9d79f60549",
+		"name": "JuiceShop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13859659",
+		"_collection_link": "https://mfdemouk.postman.co/workspace/c71e9c5c-d86a-44e4-8a78-9b4f1d507064/collection/13859659-3f0ff123-7b24-4f59-a3b3-4b9d79f60549?action=share&source=collection_link&creator=13859659"
+	},
+	"item": [
+		{
+			"name": "Application Version",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/rest/admin/application-version",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"rest",
+						"admin",
+						"application-version"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Whoami (No Auth)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/rest/user/whoami",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"rest",
+						"user",
+						"whoami"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products Search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/rest/products/search?q=orange",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"rest",
+						"products",
+						"search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "orange"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignIn",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Access token returned\", function () {\r",
+							"    var json = pm.response.json();\r",
+							"    pm.expect(json.authentication.token).exist;\r",
+							"    console.log('Saving JWT access token in collection: ' + json.authentication.token)\r",
+							"    pm.collectionVariables.set(\"ACCESS_TOKEN\", json.authentication.token)\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{EMAIL}}\",\"password\":\"{{PASSWORD}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/rest/user/login",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"rest",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ACCESS_TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "BASE_URL",
+			"value": "http://juiceshop.onfortify.com",
+			"type": "string"
+		},
+		{
+			"key": "EMAIL",
+			"value": "jim@juice-sh.op",
+			"type": "string"
+		},
+		{
+			"key": "PASSWORD",
+			"value": "ncc-1701",
+			"type": "string"
+		}
+	]
+}
