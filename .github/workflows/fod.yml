@@ -126,7 +126,7 @@ jobs:
           SETUP_EXTRA_OPTS: ${{ format('--copy-from "{0}" --sdlc-status Development --app-owner {1} --assessment-type "{2}" --use-aviator --technology-stack=JS/TS/HTML', env.FOD_PARENT_RELEASE, vars.FOD_DEFAULT_OWNER, vars.FOD_DEFAULT_ASSESSMENT_TYPE) }} 
           # SC_CLIENT_VERSION: 24.4.1
           # DO_PACKAGE_DEBUG: true
-          PACKAGE_EXTRA_OPTS: "-bt none --exclude 'data/static/codefixes/*'"
+          PACKAGE_EXTRA_OPTS: "-bt none -exclude 'build/**/*' --exclude 'test/**/*' --exclude 'data/static/codefixes/*'"
           # FOD_SAST_SCAN_EXTRA_OPTS:
           # DO_WAIT: true
           DO_POLICY_CHECK: false # we will do this later after SCA and DAST scan

@@ -1,0 +1,26 @@
+meta {
+  name: Whoami (No Auth)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/rest/user/whoami
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+script:post-response {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

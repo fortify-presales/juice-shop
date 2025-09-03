@@ -1,0 +1,36 @@
+meta {
+  name: SignIn
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{BASE_URL}}/rest/user/login
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+body:json {
+  {"email":"{{EMAIL}}","password":"{{PASSWORD}}"}
+}
+
+script:post-response {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("Access token returned", function () {
+      var json = res.getBody();
+      expect(json.authentication.token).exist;
+      console.log('Saving JWT access token in collection: ' + json.authentication.token)
+      bru.setVar("ACCESS_TOKEN", json.authentication.token)
+  });
+}
+
+settings {
+  encodeUrl: true
+}

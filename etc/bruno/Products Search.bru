@@ -1,0 +1,30 @@
+meta {
+  name: Products Search
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/rest/products/search?q=orange
+  body: none
+  auth: none
+}
+
+params:query {
+  q: orange
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+script:post-response {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: true
+}
