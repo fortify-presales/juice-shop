@@ -1,0 +1,168 @@
+{
+  "info": {
+    "name": "Juice Shop API - Collection",
+    "_postman_id": "juice-shop-collection",
+    "description": "Postman collection for Juice Shop /api and /rest endpoints. Set environment variable 'baseUrl' (default http://localhost:3000). Login request stores JWT into environment variable 'jwt'.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "jwt", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{jwt}}", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth / Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"jim@juice-sh.op\",\n  \"password\": \"ncc-1701\"\n}"
+        },
+        "url": "{{baseUrl}}/rest/user/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "  var jsonData = pm.response.json();",
+              "  if (jsonData && jsonData.authentication && jsonData.authentication.token) {",
+              "    pm.environment.set('jwt', jsonData.authentication.token);",
+              "    console.log('JWT saved to environment variable jwt');",
+              "  } else {",
+              "    console.warn('Login response did not contain authentication.token');",
+              "  }",
+              "} else {",
+              "  console.warn('Login failed with status ' + pm.response.code);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "REST - WhoAmI",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/user/whoami" }
+    },
+    {
+      "name": "REST - Change Password",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/user/change-password" }
+    },
+    {
+      "name": "REST - Reset Password",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"email\": \"user@example.com\" }" }, "url": "{{baseUrl}}/rest/user/reset-password" }
+    },
+    {
+      "name": "REST - Products Search",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/products/search?q=apple" }
+    },
+    {
+      "name": "REST - Get Basket",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/basket/1" }
+    },
+    {
+      "name": "REST - Checkout Basket",
+      "request": { "method": "POST", "url": "{{baseUrl}}/rest/basket/1/checkout" }
+    },
+    {
+      "name": "REST - Apply Coupon to Basket",
+      "request": { "method": "PUT", "url": "{{baseUrl}}/rest/basket/1/coupon/SAMPLECOUPON" }
+    },
+    {
+      "name": "REST - Admin App Version",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/admin/application-version" }
+    },
+    {
+      "name": "REST - Admin App Configuration",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/admin/application-configuration" }
+    },
+    {
+      "name": "REST - Continue Code (list)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/continue-code" }
+    },
+    {
+      "name": "REST - Captcha",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/captcha" }
+    },
+    {
+      "name": "REST - Image Captcha",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/image-captcha" }
+    },
+    {
+      "name": "REST - Track Order",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/track-order/1" }
+    },
+    {
+      "name": "REST - Languages",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/languages" }
+    },
+    {
+      "name": "REST - Order History",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/order-history" }
+    },
+    {
+      "name": "REST - Order History (all orders, accounting)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/order-history/orders" }
+    },
+    {
+      "name": "REST - Wallet Balance",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/wallet/balance" }
+    },
+    {
+      "name": "REST - Add Wallet Balance",
+      "request": { "method": "PUT", "url": "{{baseUrl}}/rest/wallet/balance" }
+    },
+    {
+      "name": "REST - Deluxe Membership Status",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/deluxe-membership" }
+    },
+    {
+      "name": "REST - Upgrade to Deluxe",
+      "request": { "method": "POST", "url": "{{baseUrl}}/rest/deluxe-membership" }
+    },
+    {
+      "name": "REST - Memories (list)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/memories" }
+    },
+    {
+      "name": "REST - Chatbot Status",
+      "request": { "method": "GET", "url": "{{baseUrl}}/rest/chatbot/status" }
+    },
+    {
+      "name": "REST - Chatbot Respond",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"message\": \"hello\" }" }, "url": "{{baseUrl}}/rest/chatbot/respond" }
+    },
+    {
+      "name": "B2B - Create Order",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"order\": {} }" }, "url": "{{baseUrl}}/b2b/v2/orders" }
+    },
+    {
+      "name": "Metrics",
+      "request": { "method": "GET", "url": "{{baseUrl}}/metrics" }
+    },
+    {
+      "name": "API (finale) - Products GET list",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/Products" }
+    },
+    {
+      "name": "API (finale) - Products GET item",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/Products/1" }
+    },
+    {
+      "name": "API (finale) - Users POST (register)",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"email\": \"new@example.com\", \"password\": \"Password1\", \"passwordRepeat\": \"Password1\" }" }, "url": "{{baseUrl}}/api/Users" }
+    },
+    {
+      "name": "API (finale) - Feedbacks POST (create)",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"message\": \"Great shop!\" }" }, "url": "{{baseUrl}}/api/Feedbacks" }
+    }
+  ]
+}

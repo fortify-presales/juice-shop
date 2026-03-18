@@ -1,0 +1,697 @@
+{
+  "info": {
+    "_postman_id": "ef0d7b8a-5ce1-421d-9b3d-b2cc1d1e83ef",
+    "name": "Juice Shop API - Collection",
+    "description": "Postman collection for Juice Shop /api and /rest endpoints. Set collection variable 'baseUrl' (default [http://localhost:3000](http://localhost:3000)). Login request stores JWT into collection variable 'jwt'.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13859659",
+    "_collection_link": "https://go.postman.co/collection/13859659-ef0d7b8a-5ce1-421d-9b3d-b2cc1d1e83ef?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth / Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Access token returned\", function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.authentication.token).exist;",
+              "    console.log('Saving JWT access token in collection: ' + json.authentication.token)",
+              "    pm.collectionVariables.set(\"jwt\", json.authentication.token)",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"jim@juice-sh.op\",\n  \"password\": \"ncc-1701\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/rest/user/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "user",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - WhoAmI",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/user/whoami",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "user",
+            "whoami"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Change Password",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/user/change-password",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "user",
+            "change-password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Reset Password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"email\": \"user@example.com\" }"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/rest/user/reset-password",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "user",
+            "reset-password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Products Search",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/products/search?q=apple",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "products",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "apple"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Get Basket",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/basket/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "basket",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Checkout Basket",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/basket/1/checkout",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "basket",
+            "1",
+            "checkout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Apply Coupon to Basket",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/basket/1/coupon/SAMPLECOUPON",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "basket",
+            "1",
+            "coupon",
+            "SAMPLECOUPON"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Admin App Version",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/admin/application-version",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "admin",
+            "application-version"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Admin App Configuration",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/admin/application-configuration",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "admin",
+            "application-configuration"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Continue Code (list)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/continue-code",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "continue-code"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Captcha",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/captcha",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "captcha"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Image Captcha",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/image-captcha",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "image-captcha"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Track Order",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/track-order/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "track-order",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Languages",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/languages",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "languages"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Order History",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/order-history",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "order-history"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Order History (all orders, accounting)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/order-history/orders",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "order-history",
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Wallet Balance",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/wallet/balance",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "wallet",
+            "balance"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Add Wallet Balance",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/wallet/balance",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "wallet",
+            "balance"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Deluxe Membership Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/deluxe-membership",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "deluxe-membership"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Upgrade to Deluxe",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/deluxe-membership",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "deluxe-membership"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Memories (list)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/memories",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "memories"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Chatbot Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rest/chatbot/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "chatbot",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "REST - Chatbot Respond",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"message\": \"hello\" }"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/rest/chatbot/respond",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rest",
+            "chatbot",
+            "respond"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "B2B - Create Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"order\": {} }"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/b2b/v2/orders",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "b2b",
+            "v2",
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Metrics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/metrics",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "metrics"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API (finale) - Products GET list",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/Products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API (finale) - Products GET item",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/Products/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API (finale) - Users POST (register)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"email\": \"new@example.com\", \"password\": \"Password1\", \"passwordRepeat\": \"Password1\" }"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Users",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API (finale) - Feedbacks POST (create)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"message\": \"Great shop!\" }"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Feedbacks",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Feedbacks"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://juice-shop.onfortify.com"
+    },
+    {
+      "key": "jwt",
+      "value": ""
+    }
+  ]
+}
