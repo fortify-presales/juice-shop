@@ -3,24 +3,20 @@
  * SPDX-License-Identifier: MIT
  */
 
-/* jslint node: true */
 import packageJson from '../package.json'
 import fs from 'node:fs'
 import logger from './logger'
 import config from 'config'
-import jsSHA from 'jssha'
 import download from 'download'
 import crypto from 'node:crypto'
 import clarinet from 'clarinet'
-import type { Challenge } from 'data/types'
+import type { Challenge } from '@juice-shop/data/types'
 
 import isHeroku from './is-heroku'
 import isDocker from './is-docker'
 import isWindows from './is-windows'
 export { default as isDocker } from './is-docker'
 export { default as isWindows } from './is-windows'
-// import isGitpod from 'is-gitpod') // FIXME Roll back to this when https://github.com/dword-design/is-gitpod/issues/94 is resolve
-const isGitpod = () => false
 
 const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 
@@ -42,7 +38,7 @@ export const startsWith = (str: string, prefix: string) => str ? str.indexOf(pre
 
 export const endsWith = (str?: string, suffix?: string) => (str && suffix) ? str.includes(suffix, str.length - suffix.length) : false
 
-export const contains = (str: string, element: string) => str ? str.includes(element) : false // TODO Inline all usages as this function is not adding any functionality to String.includes
+export const contains = (str: string, element: string) => str ? str.includes(element) : false
 
 export const containsEscaped = function (str: string, element: string) {
   return contains(str, element.replace(/"/g, '\\"'))
@@ -87,10 +83,7 @@ const getCtfKey = () => {
   return cachedCtfKey
 }
 export const ctfFlag = (text: string) => {
-  const shaObj = new jsSHA('SHA-1', 'TEXT') // eslint-disable-line new-cap
-  shaObj.setHMACKey(getCtfKey(), 'TEXT')
-  shaObj.update(text)
-  return shaObj.getHMAC('HEX')
+  return crypto.createHmac('sha1', getCtfKey()).update(text).digest('hex')
 }
 
 export const toMMMYY = (date: Date) => {
@@ -161,8 +154,7 @@ export function getChallengeEnablementStatus (challenge: Challenge,
     isDocker: isEnvironmentFunction
     isHeroku: isEnvironmentFunction
     isWindows: isEnvironmentFunction
-    isGitpod: isEnvironmentFunction
-  } = { isDocker, isHeroku, isWindows, isGitpod }): ChallengeEnablementStatus {
+  } = { isDocker, isHeroku, isWindows }): ChallengeEnablementStatus {
   if (!challenge?.disabledEnv) {
     return { enabled: true, disabledBecause: null }
   }
@@ -179,9 +171,6 @@ export function getChallengeEnablementStatus (challenge: Challenge,
   }
   if (challenge.disabledEnv?.includes('Windows') && isEnvironmentFunctions.isWindows()) {
     return { enabled: false, disabledBecause: 'Windows' }
-  }
-  if (challenge.disabledEnv?.includes('Gitpod') && isEnvironmentFunctions.isGitpod()) {
-    return { enabled: false, disabledBecause: 'Gitpod' }
   }
   if (challenge.disabledEnv && safetyModeSetting === 'enabled') {
     return { enabled: false, disabledBecause: 'Safety Mode' }
@@ -231,4 +220,12 @@ export const matchesSystemIniFile = (text: string) => {
 export const matchesEtcPasswdFile = (text: string) => {
   const match = text.match(/(\w*:\w*:\d*:\d*:\w*:.*)|(Note that this file is consulted directly)/gi)
   return match !== null && match.length >= 1
+}
+
+/**
+ * Wrapper for asynchronous Express route handlers to ensure any rejected promises are caught and passed to the next() function.
+ * TODO: Revisit the need for this wrapper once the project is migrated to Express 5 which supports async handlers natively.
+ */
+export const asyncHandler = (fn: (req: any, res: any, next: any) => Promise<any> | any) => (req: any, res: any, next: any) => {
+  void Promise.resolve(fn(req, res, next)).catch(next)
 }

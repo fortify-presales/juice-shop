@@ -10,13 +10,14 @@ import config from 'config'
 import jws from 'jws'
 
 import { products, challenges, retrieveBlueprintChallengeFile } from '../data/datacache'
-import type { Product as ProductConfig } from '../lib/config.types'
+import type { Product as ProductConfig } from '../lib/config.schema'
 import { type Challenge, type Product } from '../data/types'
 import * as challengeUtils from '../lib/challengeUtils'
 import { ComplaintModel } from '../models/complaint'
 import { FeedbackModel } from '../models/feedback'
 import * as security from '../lib/insecurity'
 import * as utils from '../lib/utils'
+import { buildSystemPrompt } from './chat'
 
 export const emptyUserRegistration = () => (req: Request, res: Response, next: NextFunction) => {
   challengeUtils.solveIf(challenges.emptyUserRegistration, () => {
@@ -59,12 +60,14 @@ export const passwordRepeatChallenge = () => (req: Request, res: Response, next:
   next()
 }
 
-export const accessControlChallenges = () => ({ url }: Request, res: Response, next: NextFunction) => {
-  challengeUtils.solveIf(challenges.scoreBoardChallenge, () => { return utils.endsWith(url, '/1px.png') })
-  challengeUtils.solveIf(challenges.web3SandboxChallenge, () => { return utils.endsWith(url, '/11px.png') })
-  challengeUtils.solveIf(challenges.adminSectionChallenge, () => { return utils.endsWith(url, '/19px.png') })
-  challengeUtils.solveIf(challenges.tokenSaleChallenge, () => { return utils.endsWith(url, '/56px.png') })
-  challengeUtils.solveIf(challenges.privacyPolicyChallenge, () => { return utils.endsWith(url, '/81px.png') })
+export const accessControlChallenges = () => (req: Request, res: Response, next: NextFunction) => {
+  const { url } = req
+  const uiBypassed = req.header('sec-fetch-dest') === 'document' || !req.header('referer')
+  challengeUtils.solveIf(challenges.scoreBoardChallenge, () => { return utils.endsWith(url, '/1px.png') }, false, uiBypassed)
+  challengeUtils.solveIf(challenges.web3SandboxChallenge, () => { return utils.endsWith(url, '/11px.png') }, false, uiBypassed)
+  challengeUtils.solveIf(challenges.adminSectionChallenge, () => { return utils.endsWith(url, '/19px.png') }, false, uiBypassed)
+  challengeUtils.solveIf(challenges.tokenSaleChallenge, () => { return utils.endsWith(url, '/56px.png') }, false, uiBypassed)
+  challengeUtils.solveIf(challenges.privacyPolicyChallenge, () => { return utils.endsWith(url, '/81px.png') }, false, uiBypassed)
   challengeUtils.solveIf(challenges.extraLanguageChallenge, () => { return utils.endsWith(url, '/tlh_AA.json') })
   challengeUtils.solveIf(challenges.retrieveBlueprintChallenge, () => { return utils.endsWith(url, retrieveBlueprintChallengeFile ?? undefined) })
   challengeUtils.solveIf(challenges.securityPolicyChallenge, () => { return utils.endsWith(url, '/security.txt') })
@@ -193,6 +196,9 @@ export const databaseRelatedChallenges = () => (req: Request, res: Response, nex
   }
   if (challengeUtils.notSolved(challenges.leakedApiKeyChallenge)) {
     leakedApiKeyChallenge()
+  }
+  if (challengeUtils.notSolved(challenges.systemPromptExtractionChallenge)) {
+    void systemPromptExtractionChallenge()
   }
   next()
 }
@@ -330,4 +336,45 @@ function dangerousIngredients () {
     .map((keyword) => {
       return { [Op.like]: `%${keyword}%` }
     })
+}
+
+export const SYSTEM_PROMPT_SIMILARITY_THRESHOLD = 0.25
+
+export function diceCoefficient (s1: string, s2: string): number {
+  if (s1 === s2) return 1
+  if (s1.length < 2 || s2.length < 2) return 0
+
+  const bigrams1 = new Map<string, number>()
+  for (let i = 0; i < s1.length - 1; i++) {
+    const bigram = s1.substring(i, i + 2)
+    bigrams1.set(bigram, (bigrams1.get(bigram) ?? 0) + 1)
+  }
+
+  let intersectionSize = 0
+  for (let i = 0; i < s2.length - 1; i++) {
+    const bigram = s2.substring(i, i + 2)
+    const count = bigrams1.get(bigram) ?? 0
+    if (count > 0) {
+      bigrams1.set(bigram, count - 1)
+      intersectionSize++
+    }
+  }
+
+  return (2.0 * intersectionSize) / (s1.length + s2.length - 2)
+}
+
+export function checkSystemPromptSimilarity (submission: string, reference: string, threshold = SYSTEM_PROMPT_SIMILARITY_THRESHOLD): boolean {
+  const score = diceCoefficient((submission ?? '').toLowerCase().trim(), reference.toLowerCase().trim())
+  return score >= threshold
+}
+
+async function systemPromptExtractionChallenge (): Promise<void> {
+  const reference = buildSystemPrompt().toLowerCase().trim()
+  const complaints = await ComplaintModel.findAll().catch(() => [])
+  for (const complaint of complaints) {
+    if (checkSystemPromptSimilarity(complaint.message ?? '', reference)) {
+      challengeUtils.solveIf(challenges.systemPromptExtractionChallenge, () => true)
+      return
+    }
+  }
 }

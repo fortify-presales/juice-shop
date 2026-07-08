@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-/* jslint node: true */
 import {
   Model,
   type InferAttributes,
@@ -13,7 +12,7 @@ import {
   type Sequelize
 } from 'sequelize'
 
-const CHALLENGE_KEYS = [
+export const CHALLENGE_KEYS = [
   'restfulXssChallenge',
   'accessLogDisclosureChallenge',
   'registerAdminChallenge',
@@ -116,15 +115,17 @@ const CHALLENGE_KEYS = [
   'resetPasswordUvoginChallenge',
   'geoStalkingMetaChallenge',
   'geoStalkingVisualChallenge',
-  'killChatbotChallenge',
   'nullByteChallenge',
-  'bullyChatbotChallenge',
   'lfrChallenge',
   'closeNotificationsChallenge',
   'csafChallenge',
   'exposedCredentialsChallenge',
   'leakedApiKeyChallenge',
-  'passwordHashLeakChallenge'
+  'passwordHashLeakChallenge',
+  'chatbotPromptInjectionChallenge',
+  'chatbotGreedyInjectionChallenge',
+  'aiDebuggingChallenge',
+  'systemPromptExtractionChallenge'
 ] as const
 
 export type ChallengeKey = typeof CHALLENGE_KEYS[number]

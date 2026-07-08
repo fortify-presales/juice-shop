@@ -96,6 +96,7 @@ export class SidenavComponent implements OnInit {
     this.cookieService.remove('token')
     sessionStorage.removeItem('bid')
     sessionStorage.removeItem('itemTotal')
+    sessionStorage.removeItem('guestBasket')
     this.userService.isLoggedIn.next(false)
     this.ngZone.run(async () => await this.router.navigate(['/']))
   }
@@ -160,8 +161,12 @@ export class SidenavComponent implements OnInit {
   startHackingInstructor () {
     this.onToggleSidenav()
     console.log('Starting instructions for challenge "Score Board"')
+    this.launchHackingInstructor('Score Board')
+  }
+
+  protected launchHackingInstructor (challengeName: string) {
     import('../../hacking-instructor').then(module => {
-      module.startHackingInstructorFor('Score Board')
+      module.startHackingInstructorFor(challengeName)
     })
   }
 }
